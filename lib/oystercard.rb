@@ -15,7 +15,7 @@ class Oystercard
   end
 
   def in_journey?
-    @entry_station == nil ? false : true
+    !!entry_station
   end
 
   def touch_in(station)

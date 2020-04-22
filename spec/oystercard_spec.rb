@@ -7,7 +7,12 @@ describe Oystercard do
     it 'balance has 0' do
       expect(subject.balance).to eq(0)
     end
+  end
 
+  describe "journeys" do
+    it "defaults to an empty array" do
+      expect(subject.journeys).to eq []
+    end
   end
 
   describe 'top_up' do
@@ -58,7 +63,7 @@ describe Oystercard do
     end
 
     it "updates entry_station variable to nil when touch_out called" do
-      subject.touch_out
+      subject.touch_out(station)
       expect(subject.entry_station).to eq(nil)
     end
   end
@@ -73,13 +78,23 @@ describe Oystercard do
     end
 
     it "Updates in_journey to false when touch_out called" do
-      subject.touch_out
+      subject.touch_out(station)
       expect(subject).not_to be_in_journey
     end
 
     it "Deducts min fare when touch_out called" do
+      expect { subject.touch_out(station) }.to change{subject.balance}.by(-Oystercard::MIN_FARE)
+    end
+  end
 
-      expect { subject.touch_out }.to change{subject.balance}.by(-Oystercard::MIN_FARE)
+  describe "array" do
+    let(:station1) { double :station1 }
+    let(:station2) { double :station2 }
+    it "stores a journey in hash in an array" do
+      subject.top_up(2)
+      subject.touch_in(station1)
+      subject.touch_out(station2)
+      expect(subject.journeys).to eq [{entry: station1, exit: station2}]
     end
   end
 

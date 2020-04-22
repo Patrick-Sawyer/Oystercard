@@ -29,22 +29,28 @@ In order to pay for my journey
 As a customer
 I need to know where I've travelled from
 
+In order to know where I have been
+As a customer
+I want to see all my previous trips
+
 Domain Model::
 
 | Object     | Message |
 | ---        | ---   |
 | Oystercard | balance |
 |            | top_up(amount) += balance
-             | deduct(fare) -= balance 
-             | in_jouney? = false 
-             | touch_in - updates @in_jounrey? true
+             | deduct(fare) -= balance
+             | in_journey? = false
+             | touch_in(station) - updates @in_journey? true
                         - throws error when below min balance
+                        - updates entry_station
              | touch_out - updates to false
-                        - changes balance by min fare 
+                        - changes balance by min fare
+               update_entry_station(station) -
              | constant = min balance 
 
 
 #test
-check in_jounrey is false when new instance 
+check in_jounrey is false when new instance
 touch_in - eq (true)
 touch_out - eq(false )

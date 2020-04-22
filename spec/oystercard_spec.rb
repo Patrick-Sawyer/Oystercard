@@ -34,28 +34,31 @@ describe Oystercard do
   end
 
   describe "touch_in" do 
-    it "Updates in_jounrey to true when touch_in called" do
+    
+    it "raises error when card balance is below min limit" do
+      expect { subject.touch_in }.to raise_error("Below minimum limit of £#{Oystercard::MIN_FARE}")
+    end 
+
+    it "Updates in_journey to true when touch_in called" do
       subject.top_up(2)
       subject.touch_in
       expect(subject).to be_in_journey
     end 
-
-    it "raises error when card balance is below min limit" do
-      expect { subject.touch_in }.to raise_error("Below minimum limit of £#{Oystercard::MIN_FARE}")
-    end 
   end 
 
-  describe "touch_out" do 
-    it "Updates in_jounrey to false when touch_out called" do
+  describe "touch_out" do
+    before(:each) do
       subject.top_up(2)
       subject.touch_in
+    end
+
+    it "Updates in_journey to false when touch_out called" do
       subject.touch_out
       expect(subject).not_to be_in_journey
     end 
 
     it "Deducts min fare when touch_out called" do
-      subject.top_up(2)
-      subject.touch_in
+
       expect { subject.touch_out }.to change{subject.balance}.by(-Oystercard::MIN_FARE)
     end 
   end 

@@ -1,5 +1,5 @@
 class Oystercard
-  attr_reader :balance, :in_journey
+  attr_reader :balance
 
   BALANCE_LIMIT = 90
   MIN_FARE = 1
@@ -15,8 +15,8 @@ class Oystercard
   end
 
   def in_journey?
-    @in_journey 
-  end 
+    @in_journey
+  end
 
   def touch_in
     raise "Below minimum limit of £#{Oystercard::MIN_FARE}" if @balance < MIN_FARE 

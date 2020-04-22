@@ -33,23 +33,43 @@ describe Oystercard do
     end 
   end
 
-  describe "touch_in" do 
-    
+  describe "touch_in error" do 
+    let(:station) { 'Holborn' }
     it "raises error when card balance is below min limit" do
-      expect { subject.touch_in }.to raise_error("Below minimum limit of £#{Oystercard::MIN_FARE}")
-    end 
+      expect { subject.touch_in(station) }.to raise_error("Below minimum limit of £#{Oystercard::MIN_FARE}")
+    end
+  end
+
+  describe 'touch_in' do
+
+    let(:station) { 'Holborn' }
+
+    before(:each) do
+      subject.top_up(2)
+      subject.touch_in(station)
+    end
 
     it "Updates in_journey to true when touch_in called" do
-      subject.top_up(2)
-      subject.touch_in
       expect(subject).to be_in_journey
     end 
+
+    it "updates entry_station variable when touch_in called" do
+      expect(subject.entry_station).to eq('Holborn')
+    end
+
+    it "updates entry_station variable to nil when touch_out called" do
+      subject.touch_out
+      expect(subject.entry_station).to eq(nil)
+    end
   end 
 
   describe "touch_out" do
+
+    let(:station) { 'Holborn' }
+
     before(:each) do
       subject.top_up(2)
-      subject.touch_in
+      subject.touch_in(station)
     end
 
     it "Updates in_journey to false when touch_out called" do

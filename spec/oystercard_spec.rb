@@ -41,7 +41,7 @@ describe Oystercard do
   describe "touch_in error" do
     let(:station) { double :station }
     it "raises error when card balance is below min limit" do
-      expect { subject.touch_in(station) }.to raise_error("Below minimum limit of £#{Oystercard::MIN_FARE}")
+      expect { subject.touch_in(station) }.to raise_error("Below minimum limit of £#{Journey::MIN_FARE}")
     end
   end
 
@@ -58,13 +58,13 @@ describe Oystercard do
       expect(subject).to be_in_journey
     end
 
-    it "updates entry_station variable when touch_in called" do
-      expect(subject.entry_station).to eq(station)
+    it "updates current_journey variable when touch_in called" do
+      expect(subject.current_journey).to be_a_kind_of(Journey)
     end
 
-    it "updates entry_station variable to nil when touch_out called" do
+    it "updates current_journey variable to nil when touch_out called" do
       subject.touch_out(station)
-      expect(subject.entry_station).to eq(nil)
+      expect(subject.current_journey).to eq(nil)
     end
   end
 
@@ -83,7 +83,7 @@ describe Oystercard do
     end
 
     it "Deducts min fare when touch_out called" do
-      expect { subject.touch_out(station) }.to change{subject.balance}.by(-Oystercard::MIN_FARE)
+      expect { subject.touch_out(station) }.to change{subject.balance}.by(-Journey::MIN_FARE)
     end
   end
 
@@ -94,7 +94,7 @@ describe Oystercard do
       subject.top_up(2)
       subject.touch_in(station1)
       subject.touch_out(station2)
-      expect(subject.journeys).to eq [{entry: station1, exit: station2}]
+      expect(subject.journeys).to eq [{entry_station: station1, exit_station: station2, fare: Journey::MIN_FARE}]
     end
   end
 

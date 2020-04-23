@@ -20,7 +20,7 @@ class Oystercard
   end
 
   def touch_in(station)
-    update_entry_station(station)
+    @entry_station = station
     raise "Below minimum limit of £#{Oystercard::MIN_FARE}" if @balance < MIN_FARE
   end
 
@@ -34,9 +34,5 @@ class Oystercard
 
   def deduct(fare)
     @balance -= fare
-  end
-
-  def update_entry_station(station)
-    @entry_station = station
   end
 end
